@@ -9,6 +9,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/user/HomePage";
 import PropertyListingPage from "./pages/user/PropertyListingPage";
 import PropertyDetailPage from "./pages/user/PropertyDetailPage";
+import LoginPage from "./pages/user/LoginPage";
+import RegisterPage from "./pages/user/RegisterPage";
 import NotFound from "./pages/NotFound";
 
 // Admin Pages
@@ -30,6 +32,8 @@ const App = () => (
           <Route path="/" element={<HomePage />} />
           <Route path="/properties" element={<PropertyListingPage />} />
           <Route path="/property/:id" element={<PropertyDetailPage />} />
+          <Route path="/login" element={<LoginPage />} /> 
+          <Route path="/register" element={<RegisterPage />} />
           
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />

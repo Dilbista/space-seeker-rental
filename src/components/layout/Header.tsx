@@ -1,14 +1,31 @@
 
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { User, LogIn, Menu, X, Home } from "lucide-react";
+import { User, LogIn, Menu, X, Home, LogOut } from "lucide-react";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check localStorage for a logged-in user on component mount
+    const user = localStorage.getItem("currentUser");
+    if (user) {
+      setCurrentUser(JSON.parse(user));
+    }
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    setCurrentUser(null);
+    navigate("/");
+    setIsMenuOpen(false);
   };
 
   return (
@@ -26,18 +43,34 @@ const Header = () => {
           <Link to="/about" className="text-gray-700 hover:text-primary">About</Link>
           <Link to="/contact" className="text-gray-700 hover:text-primary">Contact</Link>
           <div className="flex items-center space-x-4">
-            <Link to="/login">
-              <Button variant="ghost" className="flex items-center space-x-2">
-                <LogIn className="h-4 w-4" />
-                <span>Login</span>
-              </Button>
-            </Link>
-            <Link to="/register">
-              <Button className="flex items-center space-x-2">
-                <User className="h-4 w-4" />
-                <span>Register</span>
-              </Button>
-            </Link>
+            {currentUser ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-gray-700">Hi, {currentUser.fullName}</span>
+                <Button 
+                  variant="ghost" 
+                  className="flex items-center space-x-2"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </Button>
+              </div>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button variant="ghost" className="flex items-center space-x-2">
+                    <LogIn className="h-4 w-4" />
+                    <span>Login</span>
+                  </Button>
+                </Link>
+                <Link to="/register">
+                  <Button className="flex items-center space-x-2">
+                    <User className="h-4 w-4" />
+                    <span>Register</span>
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </nav>
 
@@ -59,18 +92,34 @@ const Header = () => {
             <Link to="/about" className="text-gray-700 hover:text-primary py-2" onClick={toggleMenu}>About</Link>
             <Link to="/contact" className="text-gray-700 hover:text-primary py-2" onClick={toggleMenu}>Contact</Link>
             <div className="flex flex-col space-y-2 pt-2 border-t border-gray-200">
-              <Link to="/login" onClick={toggleMenu}>
-                <Button variant="ghost" className="w-full justify-start">
-                  <LogIn className="h-4 w-4 mr-2" />
-                  <span>Login</span>
-                </Button>
-              </Link>
-              <Link to="/register" onClick={toggleMenu}>
-                <Button className="w-full justify-start">
-                  <User className="h-4 w-4 mr-2" />
-                  <span>Register</span>
-                </Button>
-              </Link>
+              {currentUser ? (
+                <>
+                  <span className="text-gray-700 py-2">Hi, {currentUser.fullName}</span>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-start"
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    <span>Logout</span>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" onClick={toggleMenu}>
+                    <Button variant="ghost" className="w-full justify-start">
+                      <LogIn className="h-4 w-4 mr-2" />
+                      <span>Login</span>
+                    </Button>
+                  </Link>
+                  <Link to="/register" onClick={toggleMenu}>
+                    <Button className="w-full justify-start">
+                      <User className="h-4 w-4 mr-2" />
+                      <span>Register</span>
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </nav>
         </div>
