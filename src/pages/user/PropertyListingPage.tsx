@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/select";
 import { Home, Search } from "lucide-react";
 
-// Mock data - would come from API in real implementation
-const allProperties: PropertyProps[] = [
+// Mock data as fallback if no properties in localStorage
+const mockProperties: PropertyProps[] = [
   {
     id: 1,
     title: "Modern 2BHK Apartment with Balcony",
@@ -118,14 +118,34 @@ const allProperties: PropertyProps[] = [
 
 const PropertyListingPage = () => {
   const [searchParams] = useSearchParams();
+  const [allProperties, setAllProperties] = useState<PropertyProps[]>(mockProperties);
   const [properties, setProperties] = useState<PropertyProps[]>([]);
   const [sortOption, setSortOption] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
   const [propertiesPerPage] = useState(6);
+  const [quickSearch, setQuickSearch] = useState("");
   
-  // Filter properties based on URL parameters
+  // Load properties from localStorage
+  useEffect(() => {
+    const storedProperties = JSON.parse(localStorage.getItem('properties') || '[]');
+    if (storedProperties.length > 0) {
+      setAllProperties([...storedProperties]);
+    }
+  }, []);
+  
+  // Filter properties based on URL parameters and quick search
   useEffect(() => {
     let filteredProperties = [...allProperties];
+    
+    // Apply quick search filter
+    if (quickSearch) {
+      filteredProperties = filteredProperties.filter(
+        (p) => 
+          p.title.toLowerCase().includes(quickSearch.toLowerCase()) ||
+          p.location.toLowerCase().includes(quickSearch.toLowerCase()) ||
+          p.type.toLowerCase().includes(quickSearch.toLowerCase())
+      );
+    }
     
     const location = searchParams.get("location");
     const type = searchParams.get("type");
@@ -171,7 +191,11 @@ const PropertyListingPage = () => {
         filteredProperties.sort((a, b) => b.price - a.price);
         break;
       case "newest":
-        // In a real app, you would sort by date
+        filteredProperties.sort((a, b) => {
+          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return dateB - dateA;
+        });
         break;
       default:
         // No sorting
@@ -180,7 +204,7 @@ const PropertyListingPage = () => {
     
     setProperties(filteredProperties);
     setCurrentPage(1); // Reset to first page when filters change
-  }, [searchParams, sortOption]);
+  }, [searchParams, sortOption, allProperties, quickSearch]);
 
   // Get current properties for pagination
   const indexOfLastProperty = currentPage * propertiesPerPage;
@@ -240,6 +264,8 @@ const PropertyListingPage = () => {
                     type="text"
                     placeholder="Quick search..."
                     className="pl-10"
+                    value={quickSearch}
+                    onChange={(e) => setQuickSearch(e.target.value)}
                   />
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>

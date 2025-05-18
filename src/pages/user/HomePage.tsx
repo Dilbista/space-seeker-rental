@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import SearchFilter from "@/components/user/SearchFilter";
@@ -8,7 +9,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 // Mock data - would come from API in real implementation
-const featuredProperties: PropertyProps[] = [
+const mockProperties: PropertyProps[] = [
   {
     id: 1,
     title: "Modern 2BHK Apartment with Balcony",
@@ -60,6 +61,22 @@ const featuredProperties: PropertyProps[] = [
 ];
 
 const HomePage = () => {
+  const [featuredProperties, setFeaturedProperties] = useState<PropertyProps[]>(mockProperties);
+  
+  // Load properties from localStorage on component mount
+  useEffect(() => {
+    const storedProperties = JSON.parse(localStorage.getItem('properties') || '[]');
+    
+    // If there are stored properties, use them, otherwise use the mock data
+    if (storedProperties.length > 0) {
+      // Get the 4 most recent properties
+      const recentProperties = [...storedProperties]
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .slice(0, 4);
+      setFeaturedProperties(recentProperties);
+    }
+  }, []);
+
   return (
     <>
       <Header />
