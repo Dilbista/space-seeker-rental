@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import DashboardLayout from "@/components/admin/DashboardLayout";
@@ -174,7 +175,7 @@ const AdminDashboard = () => {
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <p className="text-sm font-medium">{activity.action}</p>
-                        <span className="text-xs text-gray-500">{activity.time}</span
+                        <span className="text-xs text-gray-500">{activity.time}</span>
                       </div>
                       <p className="text-sm text-gray-600">{activity.description}</p>
                       <p className="text-xs text-gray-500 mt-1">By {activity.user}</p>
