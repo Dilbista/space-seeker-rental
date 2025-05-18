@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import SearchFilter from "@/components/user/SearchFilter";
 import PropertyCard, { PropertyProps } from "@/components/user/PropertyCard";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, Search, Home, Check } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
