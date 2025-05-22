@@ -11,6 +11,8 @@ import PropertyListingPage from "./pages/user/PropertyListingPage";
 import PropertyDetailPage from "./pages/user/PropertyDetailPage";
 import LoginPage from "./pages/user/LoginPage";
 import RegisterPage from "./pages/user/RegisterPage";
+import AboutPage from "./pages/user/AboutPage";
+import ContactPage from "./pages/user/ContactPage";
 import NotFound from "./pages/NotFound";
 
 // Admin Pages
@@ -34,6 +36,8 @@ const App = () => (
           <Route path="/property/:id" element={<PropertyDetailPage />} />
           <Route path="/login" element={<LoginPage />} /> 
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
