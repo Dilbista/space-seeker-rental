@@ -21,6 +21,9 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProperties from "./pages/admin/AdminProperties";
 import AdminAddProperty from "./pages/admin/AdminAddProperty";
 
+// Auth Guard
+import AuthGuard from "./components/admin/AuthGuard";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -39,11 +42,23 @@ const App = () => (
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           
-          {/* Admin Routes */}
+          {/* Admin Routes - Protected by AuthGuard */}
           <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/properties" element={<AdminProperties />} />
-          <Route path="/admin/properties/add" element={<AdminAddProperty />} />
+          <Route path="/admin/dashboard" element={
+            <AuthGuard>
+              <AdminDashboard />
+            </AuthGuard>
+          } />
+          <Route path="/admin/properties" element={
+            <AuthGuard>
+              <AdminProperties />
+            </AuthGuard>
+          } />
+          <Route path="/admin/properties/add" element={
+            <AuthGuard>
+              <AdminAddProperty />
+            </AuthGuard>
+          } />
           
           {/* 404 Page */}
           <Route path="*" element={<NotFound />} />

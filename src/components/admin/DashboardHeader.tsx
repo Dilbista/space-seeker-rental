@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
-import { Bell, User, ChevronDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Bell, User, ChevronDown, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -8,9 +9,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useToast } from '@/components/ui/use-toast';
 
 const DashboardHeader = () => {
   const [unreadNotifications, setUnreadNotifications] = useState(3);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleLogout = () => {
+    localStorage.removeItem("adminLoggedIn");
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out",
+    });
+    navigate("/admin/login");
+  };
 
   return (
     <header className="bg-white border-b border-gray-200 py-4 px-6 flex justify-between items-center">
@@ -47,7 +60,10 @@ const DashboardHeader = () => {
           <DropdownMenuContent align="end">
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
